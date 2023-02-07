@@ -79,7 +79,7 @@ export default function Levelpane() {
             let temp = levels;
             setlevels([...temp])
         }
-        console.log('innerchild', levels);
+        // console.log('innerchild', levels);
     }
 
     function deleteChildNode() {
@@ -100,27 +100,30 @@ export default function Levelpane() {
         }
     }
     function prev() {
-        if (totalChildList.indexOf(((Number(innerChild) - 0.1).toFixed(1).toString())) >= 0) {
+        if (innerChild.length > 1 && totalChildList.indexOf(((Number(innerChild) - 0.1).toFixed(1).toString())) >= 0) {
             setSelectedLi(selectedLi - 1);
             setinnerChild(((Number(innerChild) - 0.1).toFixed(1)).toString());
             dispatch(updatelevel(((Number(innerChild) - 0.1).toFixed(1)).toString()));
+        } else if (innerChild.length === 1 && totallevelsList.indexOf((Number(innerChild) - 1)) >= 0) {
+            setSelectedLi(selectedLi - 1);
+            setinnerChild((Number(innerChild) - 1).toString());
+            dispatch(updatelevel((Number(innerChild) - 1)));
         }
     }
     function next() {
-        debugger
         if (innerChild.length > 1 && totalChildList.indexOf(((Number(innerChild) + 0.1).toFixed(1).toString())) >= 0) {
             setSelectedLi(selectedLi + 1);
             setinnerChild(((Number(innerChild) + 0.1).toFixed(1)).toString());
             dispatch(updatelevel(((Number(innerChild) + 0.1).toFixed(1)).toString()))
-        } else if(innerChild.length === 1){
+        } else if (innerChild.length === 1 && totallevelsList.indexOf((Number(innerChild) + 1)) >= 0) {
             setSelectedLi(selectedLi + 1);
-            setinnerChild(((Number(innerChild) + 0.1).toFixed(1)).toString());
+            setinnerChild((Number(innerChild) + 1).toString());
             dispatch(updatelevel((Number(innerChild) + 1)));
         }
     }
 
     const handleClickColorChange = (e: any, index: any) => {
-        console.log(e.target.childNodes[e.target.childNodes.length - 1].wholeText)
+        // console.log(e.target.childNodes[e.target.childNodes.length - 1].wholeText)
         setinnerChild(e.target.childNodes[e.target.childNodes.length - 1].wholeText)
         dispatch(updatelevel(e.target.childNodes[e.target.childNodes.length - 1].wholeText))
         setSelectedLi(index);
@@ -149,9 +152,10 @@ export default function Levelpane() {
         settotallevelsList([...tempLevels]);
     }, [levels])
 
-    console.log('totalChildList', totalChildList);
-    console.log('selectedLi', selectedLi);
-    console.log('levels', levels);
+    // console.log('totalChildList', totalChildList);
+    // console.log('totallevelsList', totallevelsList);
+    // console.log('selectedLi', selectedLi);
+    // console.log('levels', levels);
 
     return (
         <>

@@ -17,12 +17,6 @@ export default function Rightsidepane() {
   const dispatch = useDispatch();
   const ref = useRef(true);
 
-  function useFirstRender() {
-    const firstRender = ref.current;
-    ref.current = false;
-    return firstRender;
-  }
-
   const fetchFootballers = async () => {
     await axios.get("https://api.quotable.io/random")
       .then((res) => {
@@ -35,7 +29,8 @@ export default function Rightsidepane() {
   }
 
   useEffect(() => {
-    if (!useFirstRender() && innerChildContent.tree.innercotent[whatlevel] == null) {
+    ref.current = false;
+    if (!ref.current && innerChildContent.tree.innercotent[whatlevel] == null) {
       fetchFootballers()
     }
   }, [whatlevel])

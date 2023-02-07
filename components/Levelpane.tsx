@@ -147,6 +147,7 @@ export default function Levelpane() {
     }
     let temptotallevs = mergeallchild();
     let tempLevels = mergeallLevels();
+    
     useEffect(() => {
         settotalChildList([...temptotallevs]);
         settotallevelsList([...tempLevels]);

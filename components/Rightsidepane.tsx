@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios';
 import { updateinnercontent } from 'store/Mainslice';
 import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/router';
 
 export default function Rightsidepane() {
 
@@ -16,6 +17,7 @@ export default function Rightsidepane() {
   const [innercontent, setinnercontent] = useState<any>();
   const dispatch = useDispatch();
   const ref = useRef(true);
+  const router = useRouter();
 
   const fetchFootballers = async () => {
     await axios.get("https://api.quotable.io/random")
@@ -40,19 +42,19 @@ export default function Rightsidepane() {
   return (
     <div>
       <div className='flex mt-2 gap-8 ml-8'>
-        <div className='text-[#015389ff] font-medium capitalize cursor-pointer'>
+        <div onClick={() => router.push('/item1')} className='text-[#015389ff] font-medium capitalize cursor-pointer'>
           item1
         </div>
         <hr className='bg-gray-300 h-6 w-[2px] rounded-lg' />
-        <div className='text-[#015389ff] font-medium capitalize cursor-pointer'>
+        <div onClick={() => router.push('/item2')} className='text-[#015389ff] font-medium capitalize cursor-pointer'>
           item2
         </div>
         <hr className='bg-gray-300 h-6 w-[2px] rounded-lg' />
-        <div className='text-[#015389ff] font-medium capitalize cursor-pointer'>
+        <div onClick={() => router.push('/item3')} className='text-[#015389ff] font-medium capitalize cursor-pointer'>
           item3
         </div>
         <hr className='bg-gray-300 h-6 w-[2px] rounded-lg' />
-        <div className='text-[#015389ff] font-medium capitalize cursor-pointer'>
+        <div onClick={() => router.push('/item4')} className='text-[#015389ff] font-medium capitalize cursor-pointer'>
           item4
         </div>
       </div>

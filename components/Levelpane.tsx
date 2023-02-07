@@ -1,5 +1,7 @@
-import React, { useMemo } from 'react'
+import React, { useEffect } from 'react'
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { updatelevel } from 'store/Mainslice';
 
 let array: any = [
     {
@@ -26,14 +28,16 @@ export default function Levelpane() {
 
     const [levels, setlevels] = useState<any>(array);
     const [selectedLi, setSelectedLi] = useState(0);
-    const [innerChild, setinnerChild] = useState('');
+    const [innerChild, setinnerChild] = useState('1');
+    const [totalChildList, settotalChildList] = useState<any>([]);
+    const [totallevelsList, settotallevelsList] = useState<any>([]);
+
+    const dispatch = useDispatch();
 
     function addChildNode() {
-        debugger
         if (selectedLi == null) {
             array.push([]);
             array[array.length - 1] = { level: array.length }
-            // console.log(array)
             setlevels([...array])
         } else if (selectedLi.toString().length < 3) {
             if (levels[selectedLi]?.child == null) {
@@ -79,7 +83,6 @@ export default function Levelpane() {
     }
 
     function deleteChildNode() {
-        debugger
         if (levels.length > 1) {
             let index = selectedLi.toString().split('')[0]
             for (let i = 0; i < levels.length; i++) {
@@ -97,22 +100,56 @@ export default function Levelpane() {
         }
     }
     function prev() {
-        setSelectedLi(selectedLi - 1);
-        setinnerChild(((Number(innerChild) - 0.1).toFixed(1)).toString());
+        if (totalChildList.indexOf(((Number(innerChild) - 0.1).toFixed(1).toString())) >= 0) {
+            setSelectedLi(selectedLi - 1);
+            setinnerChild(((Number(innerChild) - 0.1).toFixed(1)).toString());
+            dispatch(updatelevel(((Number(innerChild) - 0.1).toFixed(1)).toString()));
+        }
     }
     function next() {
         debugger
-        setSelectedLi(selectedLi + 1);
-        setinnerChild(((Number(innerChild) + 0.1).toFixed(1)).toString());
+        if (innerChild.length > 1 && totalChildList.indexOf(((Number(innerChild) + 0.1).toFixed(1).toString())) >= 0) {
+            setSelectedLi(selectedLi + 1);
+            setinnerChild(((Number(innerChild) + 0.1).toFixed(1)).toString());
+            dispatch(updatelevel(((Number(innerChild) + 0.1).toFixed(1)).toString()))
+        } else if(innerChild.length === 1){
+            setSelectedLi(selectedLi + 1);
+            setinnerChild(((Number(innerChild) + 0.1).toFixed(1)).toString());
+            dispatch(updatelevel((Number(innerChild) + 1)));
+        }
     }
 
     const handleClickColorChange = (e: any, index: any) => {
-        debugger
         console.log(e.target.childNodes[e.target.childNodes.length - 1].wholeText)
         setinnerChild(e.target.childNodes[e.target.childNodes.length - 1].wholeText)
+        dispatch(updatelevel(e.target.childNodes[e.target.childNodes.length - 1].wholeText))
         setSelectedLi(index);
     };
 
+    function mergeallchild() {
+        let temp: any = [];
+        for (let i = 0; i < levels.length; i++) {
+            temp = temp.concat(levels[i].child)
+        }
+        return temp;
+
+    }
+    function mergeallLevels() {
+        let tempLevel: any = [];
+        for (let i = 0; i < levels.length; i++) {
+            tempLevel = tempLevel.concat(levels[i].level)
+        }
+        return tempLevel;
+
+    }
+    let temptotallevs = mergeallchild();
+    let tempLevels = mergeallLevels();
+    useEffect(() => {
+        settotalChildList([...temptotallevs]);
+        settotallevelsList([...tempLevels]);
+    }, [levels])
+
+    console.log('totalChildList', totalChildList);
     console.log('selectedLi', selectedLi);
     console.log('levels', levels);
 
@@ -120,7 +157,6 @@ export default function Levelpane() {
         <>
             <div className='p-5 h-[90%] overflow-y-scroll'>
                 {levels.map((value: any, index: number) => {
-                    debugger
                     return (
                         <div key={index}>
                             <div className='font-bold text-[#015389ff] cursor-pointer'
@@ -153,7 +189,7 @@ export default function Levelpane() {
                     )
                 })}
             </div>
-            <div className='fixed bottom-2 p-1 w-[30%]'>
+            <div className='fixed bottom-2 p-1 w-[29%]'>
                 <div className='flex justify-between'>
                     <div id='leftbt'>
                         <button className='w-8 h-8 font-bold bg-[#015389ff] text-white ' onClick={addChildNode}>

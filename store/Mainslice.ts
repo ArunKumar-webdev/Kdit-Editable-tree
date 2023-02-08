@@ -5,12 +5,14 @@ interface datatype {
   innercotent: any;
   whichlevel: string;
   themecolor: any;
+  iscontainerclicked: boolean;
 }
 
 const initialState: datatype = {
   whichlevel: "1",
   innercotent: {},
   themecolor: "",
+  iscontainerclicked: false
 };
 
 // create a slice
@@ -27,6 +29,14 @@ export const treeslice = createSlice({
     updatethemecolor: (state, action) => {
       state.themecolor = action.payload;
     },
+    reset: (state) => {
+      state.themecolor = '';
+      state.whichlevel = '1';
+      state.innercotent = {};
+    },
+    clickedContainer: (state, action) => {
+      state.iscontainerclicked = action.payload;
+    },
   },
 });
 // config the store
@@ -40,5 +50,5 @@ const store = configureStore({
 export default store;
 
 // export the action
-export const { updatelevel, updateinnercontent, updatethemecolor } =
+export const { updatelevel, updateinnercontent, updatethemecolor, reset, clickedContainer } =
   treeslice.actions;

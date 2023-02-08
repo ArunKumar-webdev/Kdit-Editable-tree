@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updatelevel } from 'store/Mainslice';
+import { updatelevel, clickedContainer } from 'store/Mainslice';
 
 let array: any = [
     {
@@ -27,14 +27,31 @@ let array: any = [
 export default function Levelpane() {
 
     const [levels, setlevels] = useState<any>(array);
-    const [selectedLi, setSelectedLi] = useState(0);
+    const [selectedLi, setSelectedLi] = useState<any>(0);
     const [innerChild, setinnerChild] = useState('1');
     const [totalChildList, settotalChildList] = useState<any>([]);
     const [totallevelsList, settotallevelsList] = useState<any>([]);
 
     const dispatch = useDispatch();
+    const iscontainerclicked = useSelector((states: any) => {
+        return states.tree.iscontainerclicked
+    });
 
-    function addChildNode() {
+    useEffect(() => {
+        if (iscontainerclicked) {
+            setSelectedLi(null);
+            setinnerChild('0');
+        }
+    }, [iscontainerclicked])
+
+    const whatlevel: string = useSelector((states: any) => {
+        return states.tree.whichlevel
+    });
+
+    //   console.log('whatlevel', whatlevel)
+
+    function addChildNode(e: any) {
+        e.stopPropagation();
         if (selectedLi == null) {
             array.push([]);
             array[array.length - 1] = { level: array.length }
@@ -82,9 +99,10 @@ export default function Levelpane() {
         // console.log('innerchild', levels);
     }
 
-    function deleteChildNode() {
+    function deleteChildNode(e: any) {
+        e.stopPropagation();
         if (levels.length > 1) {
-            let index = selectedLi.toString().split('')[0]
+            let index = whatlevel.toString().length >= 3 ? whatlevel.toString().split('')[0] : whatlevel;
             for (let i = 0; i < levels.length; i++) {
                 if (levels[i].level == index) {
                     delete levels[i];
@@ -99,23 +117,25 @@ export default function Levelpane() {
             alert('Tree List Should Contain More Than One Data To Perform Delete ')
         }
     }
-    function prev() {
+    function prev(e: any) {
+        e.stopPropagation();
         if (innerChild.length > 1 && totalChildList.indexOf(((Number(innerChild) - 0.1).toFixed(1).toString())) >= 0) {
             setSelectedLi(selectedLi - 1);
             setinnerChild(((Number(innerChild) - 0.1).toFixed(1)).toString());
             dispatch(updatelevel(((Number(innerChild) - 0.1).toFixed(1)).toString()));
-        } else if (innerChild.length === 1 && totallevelsList.indexOf((Number(innerChild) - 1)) >= 0) {
+        } else if (innerChild.length <= 2 && totallevelsList.indexOf((Number(innerChild) - 1)) >= 0) {
             setSelectedLi(selectedLi - 1);
             setinnerChild((Number(innerChild) - 1).toString());
             dispatch(updatelevel((Number(innerChild) - 1)));
         }
     }
-    function next() {
+    function next(e: any) {
+        e.stopPropagation();
         if (innerChild.length > 1 && totalChildList.indexOf(((Number(innerChild) + 0.1).toFixed(1).toString())) >= 0) {
             setSelectedLi(selectedLi + 1);
             setinnerChild(((Number(innerChild) + 0.1).toFixed(1)).toString());
             dispatch(updatelevel(((Number(innerChild) + 0.1).toFixed(1)).toString()))
-        } else if (innerChild.length === 1 && totallevelsList.indexOf((Number(innerChild) + 1)) >= 0) {
+        } else if (innerChild.length <= 2 && totallevelsList.indexOf((Number(innerChild) + 1)) >= 0) {
             setSelectedLi(selectedLi + 1);
             setinnerChild((Number(innerChild) + 1).toString());
             dispatch(updatelevel((Number(innerChild) + 1)));
@@ -124,9 +144,10 @@ export default function Levelpane() {
 
     const handleClickColorChange = (e: any, index: any) => {
         // console.log(e.target.childNodes[e.target.childNodes.length - 1].wholeText)
-        setinnerChild(e.target.childNodes[e.target.childNodes.length - 1].wholeText)
-        dispatch(updatelevel(e.target.childNodes[e.target.childNodes.length - 1].wholeText))
+        setinnerChild(e.target.childNodes[e.target.childNodes.length - 1].textContent)
+        dispatch(updatelevel(e.target.childNodes[e.target.childNodes.length - 1].textContent))
         setSelectedLi(index);
+        dispatch(clickedContainer(false));
     };
 
     function mergeallchild() {
@@ -147,7 +168,7 @@ export default function Levelpane() {
     }
     let temptotallevs = mergeallchild();
     let tempLevels = mergeallLevels();
-    
+
     useEffect(() => {
         settotalChildList([...temptotallevs]);
         settotallevelsList([...tempLevels]);
@@ -160,7 +181,11 @@ export default function Levelpane() {
 
     return (
         <>
-            <div className='p-5 h-[90%] overflow-y-scroll'>
+            <div className='p-5' onClick={(e) => {
+                // setSelectedLi(null);
+                // setinnerChild('0');
+                e.stopPropagation();
+            }}>
                 {levels.map((value: any, index: number) => {
                     return (
                         <div key={index}>

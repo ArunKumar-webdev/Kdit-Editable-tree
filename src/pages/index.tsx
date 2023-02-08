@@ -2,7 +2,8 @@ import Levelpane from 'components/Levelpane';
 import Rightsidepane from 'components/Rightsidepane';
 import { updatethemecolor } from 'store/Mainslice';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { clickedContainer } from 'store/Mainslice';
 
 
 export default function Home() {
@@ -23,24 +24,27 @@ export default function Home() {
     return color;
   }
 
+  function remove() {
+    dispatch(clickedContainer(true));
+  }
+
   return (
     <>
-    <div className='hidden md:block'>
-      <div className='flex flex-wrap justify-end mb-5 mt-5'>
-        <div className='mb-3 font-bold text-[#015389ff] cursor-pointer' onClick={() => {
-          dispatch(updatethemecolor(getcolor()));
-          // setcolor(getcolor())
-        }}>Editable Tree Menu</div>
-        <hr className={'w-full h-[2px] bg-[#015389ff]'} />
-      </div>
-      <div className='flex flex-wrap justify-between'>
-        <div id='asd' className={themecolor.dark == '' || themecolor.dark == null ? 'w-[30%] h-[90vh] bg-[#d0ecffff]' : 'w-[30%] h-[90vh]'} style={{ backgroundColor: themecolor.dark == null ? '' : themecolor.dark }}>
-          <Levelpane />
+      <div className='hidden md:block'>
+        <div className='flex flex-wrap justify-end mb-5 mt-5'>
+          <div className='mb-3 font-bold text-[#015389ff] cursor-pointer' onClick={() => {
+            dispatch(updatethemecolor(getcolor()));
+          }}>Editable Tree Menu</div>
+          <hr className={'w-full h-[2px] bg-[#015389ff]'} />
         </div>
-        <div className={themecolor.light == '' || themecolor.light == null ? 'w-[67%] bg-[#f0f9ffff] h-[90vh]' : 'w-[67%] h-[90vh]'} style={{ backgroundColor: themecolor.light == null ? '' : themecolor.light }}>
-          <Rightsidepane />
+        <div className='flex flex-wrap justify-between'>
+          <div onClick={() => { remove() }} className={themecolor.dark == '' || themecolor.dark == null ? 'w-[30%] h-[90vh] bg-[#d0ecffff] overflow-y-scroll' : 'w-[30%] h-[90vh]'} style={{ backgroundColor: themecolor.dark == null ? '' : themecolor.dark }}>
+            <Levelpane />
+          </div>
+          <div className={themecolor.light == '' || themecolor.light == null ? 'w-[67%] bg-[#f0f9ffff] h-[90vh]' : 'w-[67%] h-[90vh]'} style={{ backgroundColor: themecolor.light == null ? '' : themecolor.light }}>
+            <Rightsidepane />
+          </div>
         </div>
-      </div>
       </div>
       <div className='block md:hidden font-bold text-xl'>
         Current supported only for Desktop View

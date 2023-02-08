@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios';
-import { updateinnercontent } from 'store/Mainslice';
+import { updateinnercontent, reset } from 'store/Mainslice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
@@ -37,24 +37,25 @@ export default function Rightsidepane() {
     }
   }, [whatlevel])
 
+  // console.log('whatlevel', whatlevel)
   // console.log('innerChildContent', innerChildContent)
 
   return (
     <div>
       <div className='flex mt-2 gap-8 ml-8'>
-        <div onClick={() => router.push('/item1')} className='text-[#015389ff] font-medium capitalize cursor-pointer'>
+        <div onClick={() => { router.push('/item1'); dispatch(reset()); }} className='text-[#015389ff] font-medium capitalize cursor-pointer'>
           item1
         </div>
         <hr className='bg-gray-300 h-6 w-[2px] rounded-lg' />
-        <div onClick={() => router.push('/item2')} className='text-[#015389ff] font-medium capitalize cursor-pointer'>
+        <div onClick={() => { router.push('/item2'); dispatch(reset()); }} className='text-[#015389ff] font-medium capitalize cursor-pointer'>
           item2
         </div>
         <hr className='bg-gray-300 h-6 w-[2px] rounded-lg' />
-        <div onClick={() => router.push('/item3')} className='text-[#015389ff] font-medium capitalize cursor-pointer'>
+        <div onClick={() => { router.push('/item3'); dispatch(reset()); }} className='text-[#015389ff] font-medium capitalize cursor-pointer'>
           item3
         </div>
         <hr className='bg-gray-300 h-6 w-[2px] rounded-lg' />
-        <div onClick={() => router.push('/item4')} className='text-[#015389ff] font-medium capitalize cursor-pointer'>
+        <div onClick={() => { router.push('/item4'); dispatch(reset()); }} className='text-[#015389ff] font-medium capitalize cursor-pointer'>
           item4
         </div>
       </div>

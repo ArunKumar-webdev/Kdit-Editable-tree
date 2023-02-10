@@ -112,6 +112,7 @@ export default function Levelpane() {
             let data: any = levels.filter(function (element: any) {
                 return element !== undefined;
             });
+            dispatch(updatelevel((Number(index) + 1)));
             setlevels([...data]);
         } else {
             alert('Tree List Should Contain More Than One Data To Perform Delete ')

@@ -6,13 +6,15 @@ interface datatype {
   whichlevel: string;
   themecolor: any;
   iscontainerclicked: boolean;
+  innernamecontent: any;
 }
 
 const initialState: datatype = {
   whichlevel: "1",
   innercotent: {},
   themecolor: "",
-  iscontainerclicked: false
+  iscontainerclicked: false,
+  innernamecontent: {},
 };
 
 // create a slice
@@ -37,6 +39,9 @@ export const treeslice = createSlice({
     clickedContainer: (state, action) => {
       state.iscontainerclicked = action.payload;
     },
+    updatenameforlevel: (state, action) => {
+      state.innernamecontent[state.whichlevel] = action.payload;
+    },
   },
 });
 // config the store
@@ -50,5 +55,5 @@ const store = configureStore({
 export default store;
 
 // export the action
-export const { updatelevel, updateinnercontent, updatethemecolor, reset, clickedContainer } =
+export const { updatelevel, updateinnercontent, updatethemecolor, reset, clickedContainer,updatenameforlevel } =
   treeslice.actions;

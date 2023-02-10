@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios';
-import { updateinnercontent, reset } from 'store/Mainslice';
+import { updateinnercontent, reset, updatenameforlevel } from 'store/Mainslice';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 
@@ -13,6 +13,12 @@ export default function Rightsidepane() {
   const innerChildContent = useSelector((states: any) => {
     return states
   });
+
+  const innerChildtext = useSelector((states: any) => {
+    return states.tree.innernamecontent
+  });
+
+  // console.log('innerChildtext', innerChildtext)
 
   const [innercontent, setinnercontent] = useState<any>();
   const dispatch = useDispatch();
@@ -30,10 +36,17 @@ export default function Rightsidepane() {
       })
   }
 
+  const [value, setvalue] = useState('')
+
   useEffect(() => {
     ref.current = false;
     if (!ref.current && innerChildContent.tree.innercotent[whatlevel] == null) {
       fetchFootballers()
+    }
+    if (innerChildtext[whatlevel]) {
+      setvalue(innerChildtext[whatlevel])
+    } else {
+      setvalue('')
     }
   }, [whatlevel])
 
@@ -60,7 +73,10 @@ export default function Rightsidepane() {
         </div>
       </div>
       <div className='mt-20 ml-8'>
-        <input className='border-black border capitalize cursor-not-allowed' readOnly value={whatlevel.toString().includes('Level') ? whatlevel : `Level ${whatlevel}`} />
+        <input className='border-black border capitalize' onChange={(e) => {
+          dispatch((updatenameforlevel(e.target.value)));
+          setvalue(e.target.value)
+        }} value={value.length === 0 ? whatlevel.toString().includes('Level') ? whatlevel : `Level ${whatlevel}` : value} />
       </div>
       <div className='mt-5 ml-8'>
         <textarea className='border-black border capitalize resize-none' cols={120} rows={20} onChange={(e) => {
